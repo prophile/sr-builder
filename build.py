@@ -2,10 +2,10 @@ import argparse
 from collections import namedtuple
 from pathlib import Path, PurePosixPath
 import tempfile
-from venv import create as create_venv
 from subprocess import check_call
 from urllib.parse import urlparse
 import os.path
+import sys
 
 Repo = namedtuple('Repo', 'url branch')
 
@@ -28,7 +28,16 @@ targets.add_argument('-o', '--output', help='directory to output built distribut
                     type=Path)
 targets.add_argument('-r', '--rsync', help='remote directory to output build distributions',
                     type=str)
+parser.add_argument('-v', '--virtualenv', help='path to virtualenv',
+                    default='/usr/bin/virtualenv')
 args = parser.parse_args()
+
+root_deps = ['wheel',
+             'nose',
+             'Sphinx==1.3b2']
+
+def create_virtualenv(directory, python=sys.executable):
+    check_call((args.virtualenv, '-p', python, directory))
 
 with tempfile.TemporaryDirectory() as tmpdir:
     work = Path(tmpdir).resolve()
@@ -39,10 +48,11 @@ with tempfile.TemporaryDirectory() as tmpdir:
         DST.mkdir()
     virtenv = work / 'venv'
     print('Creating virtualenv...')
-    create_venv(str(virtenv), with_pip=True)
-    check_call([str(virtenv / 'bin/pip'),
-                'install',
-                'wheel'])
+    create_virtualenv(str(virtenv))
+    for root_dep in root_deps:
+        check_call([str(virtenv / 'bin/pip'),
+                    'install',
+                    root_dep])
     for repo in REPOSITORIES:
         name = PurePosixPath(urlparse(repo.url).path).stem
         check_call(['git', 'clone', '-b', repo.branch, repo.url, name],
