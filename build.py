@@ -17,7 +17,7 @@ REPOSITORIES = [
     Repo(sr('comp/srcomp'), 'master'),
     Repo(sr('comp/srcomp-http'), 'master'),
     Repo(sr('comp/srcomp-scorer'), 'master'),
-    #Repo(sr('tools'), 'new-tools'),
+    Repo(sr('tools'), 'new-tools'),
     Repo(sr('brain/herdsman'), 'master'),
     Repo('https://github.com/prophile/sr-scheduler-2015', 'master')
 ]
@@ -44,8 +44,8 @@ def create_virtualenv(directory, python=sys.executable):
     check_call((args.virtualenv, '-p', python, directory))
 
 versions = {
-    args.python2: ['bdist_wheel'],
-    args.python3: ['sdist', 'bdist_wheel']
+    args.python2: ['bdist_egg', 'bdist_wheel'],
+    args.python3: ['sdist', 'bdist_egg', 'bdist_wheel']
 }
 
 virtualenvs = {
