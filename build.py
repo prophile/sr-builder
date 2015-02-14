@@ -17,9 +17,10 @@ REPOSITORIES = [
     Repo(sr('comp/srcomp'), 'master'),
     Repo(sr('comp/srcomp-http'), 'master'),
     Repo(sr('comp/srcomp-scorer'), 'master'),
+    Repo(sr('comp/srcomp-cli'), 'master'),
     Repo(sr('tools'), 'new-tools'),
     Repo(sr('brain/herdsman'), 'master'),
-    Repo('https://github.com/prophile/sr-scheduler-2015', 'master')
+    Repo(sr('brain/sr-robot'), 'master'),
 ]
 
 parser = argparse.ArgumentParser(description='SR Python distribution builder')
